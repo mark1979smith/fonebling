@@ -1,0 +1,56 @@
+@image-cdn: 'http://static.fonebling.co.uk/';
+#page__homepage {
+  .brand {
+    position: relative;
+    margin-bottom: 20px;
+
+    .brand__container {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: 165px;
+      display: table;
+      text-align: center;
+      color: #aaa;
+      background: #343434 no-repeat center center;
+
+      .brand__link {
+        display: block;
+        text-align: center;
+        padding: 2px 10px 0;
+        font-size: 13px;
+        background-color: #0074bd;
+        height: 27px;
+        margin-top: 138px;
+        a {
+          color: #FFF;
+          font-size: 15px;
+        }
+      }
+
+      &.apple {
+        background-image: url("@{image-cdn}apple-logo.png");
+      }
+
+      &.samsung {
+        background-image: url("@{image-cdn}samsung-logo.png");
+      }
+
+      &.htc {
+        background-image: url("@{image-cdn}htc-logo.png");
+      }
+
+      &.sony {
+        background-image: url("@{image-cdn}sony-logo.png");
+      }
+
+      &.nokia {
+        background-image: url("@{image-cdn}nokia-logo.png");
+      }
+
+      &.motorola {
+        background-image: url("@{image-cdn}motorola-logo.png");
+      }
+    }
+  }
+}
