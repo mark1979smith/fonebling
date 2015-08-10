@@ -50,6 +50,19 @@ return array(
                     ),
                 ),
             ),
+            'collection' => array(
+                'type'          => 'Segment',
+                'options' => array(
+                    'route' => '/collections/:tags',
+                    'constraints'   => array(
+                        'tags' => '[a-zA-Z][a-zA-Z0-9_-]+'
+                    ),
+                    'defaults'      => array(
+                        'controller'    => 'Application\Controller\Collection',
+                        'action'        => 'index'
+                    )
+                )
+            )
         ),
     ),
     'service_manager' => array(
@@ -73,7 +86,8 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController'
+            'Application\Controller\Index' => 'Application\Controller\IndexController',
+            'Application\Controller\Collection' => 'Application\Controller\CollectionController'
         ),
     ),
     'view_manager' => array(

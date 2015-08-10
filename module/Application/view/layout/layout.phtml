@@ -14,10 +14,12 @@
         <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
                         ->prependStylesheet($this->Cdn()->basePath('/css/style.css'))
                         ->prependStylesheet($this->Cdn()->basePath('/css/bootstrap-theme.min.v303.css'))
-                        ->prependStylesheet($this->Cdn()->basePath('/css/bootstrap.min.v303.css')) ?>
+                        ->prependStylesheet($this->Cdn()->basePath('/css/bootstrap.min.v303.css'))
+                        ->prependStylesheet($this->Cdn()->basePath('/css/jquery-ui.lightness.min.v1114.css')) ?>
 
         <!-- Scripts -->
         <?php echo $this->headScript()
+            ->prependFile($this->Cdn()->basePath('/js/jquery-ui.min.v1114.js'))
             ->prependFile($this->Cdn()->basePath('/js/bootstrap.min.v303.js'))
             ->prependFile($this->Cdn()->basePath('/js/jquery.min.v111.js'))
             ->prependFile($this->Cdn()->basePath('/js/respond.min.v110.js'), 'text/javascript', array('conditional' => 'lt IE 9',))
