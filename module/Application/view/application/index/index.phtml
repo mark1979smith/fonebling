@@ -2,9 +2,10 @@
 
 
 
+    <h1>Welcome to fonebling.co.uk</h1>
 
 
-
+    <h2>Choose the manufacturer of your device</h2>
     <div class="col-xs-12 col-sm-6 col-md-4 brand">
         <div class="brand__container apple">
                 <div class="brand__link"><a href="/collections/apple">Apple Accessories</a></div>
@@ -41,3 +42,14 @@
 
 
 </div>
+
+<?php $this->inlineScript()->captureStart();
+echo <<<JS
+$('#page__homepage').on('click', '.brand', function(e) {
+    e.preventDefault();
+    var container = $(this);
+
+    window.location.href=$(container).find('a').prop('href');
+})
+JS;
+$this->inlineScript()->captureEnd(); ?>
