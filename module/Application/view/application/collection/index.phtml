@@ -8,6 +8,8 @@
 <div class="row" id="page__collection">
 
     <div class="col-sm-4">
+        <h2>Filters</h2>
+        <p><small><label><input type="radio" name="bundles" value="include" checked="checked" /> Include Bundles</label> <label><input type="radio" name="bundles" value="exclude" /> Exclude Bundles</label></small></p>
         <p>
             <label for="amount">Price range:</label>
             <div id="amount"></div>
@@ -16,94 +18,8 @@
         <div id="slider-range"></div>
 
     </div>
-    <div class="col-sm-8 collection">
-
-        <div class="row" data-item-price="9.99" data-total-price="11.23">
-            <div class="col-sm-2">
-                <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=99%C3%9799&w=99&h=99" class="img-rounded"/>
-            </div>
-            <div class="col-sm-8">
-                <h3>This is a product title</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius auctor erat a placerat.
-                    Nunc congue, lacus id commodo blandit, ex tortor blandit orci, nec euismod nisl lectus a sapien.
-                    Vivamus porta neque vel finibus ullamcorper. Donec tincidunt mi quis auctor convallis. Nullam
-                    imperdiet nisl.
-                </p>
-            </div>
-            <div class="col-sm-2">
-                From &pound;9.99<br /><small class="text-muted">+&pound;1.24 delivery</small>
-
-                <button type="button" class="btn btn-primary">Buy Now</button>
-            </div>
-
-        </div>
-
-        <div class="row" data-item-price="15.99" data-total-price="15.99">
-            <div class="col-sm-2">
-                <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=99%C3%9799&w=99&h=99" class="img-rounded"/>
-            </div>
-            <div class="col-sm-8">
-                <h3>This is a product title</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius auctor erat a placerat.
-                    Nunc congue, lacus id commodo blandit, ex tortor blandit orci, nec euismod nisl lectus a sapien.
-                    Vivamus porta neque vel finibus ullamcorper. Donec tincidunt mi quis auctor convallis. Nullam
-                    imperdiet nisl.
-                </p>
-            </div>
-            <div class="col-sm-2">
-                From &pound;15.99<br /><small class="text-muted">+FREE delivery</small>
-
-                <button type="button" class="btn btn-primary">Buy Now</button>
-            </div>
-
-        </div>
-
-        <div class="row" data-item-price="8.00" data-total-price="10.50">
-            <div class="col-sm-2">
-                <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=99%C3%9799&w=99&h=99" class="img-rounded" />
-            </div>
-            <div class="col-sm-8">
-                <h3>This is a product title</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius auctor erat a placerat.
-                    Nunc congue, lacus id commodo blandit, ex tortor blandit orci, nec euismod nisl lectus a sapien.
-                    Vivamus porta neque vel finibus ullamcorper. Donec tincidunt mi quis auctor convallis. Nullam
-                    imperdiet nisl.
-                </p>
-            </div>
-            <div class="col-sm-2">
-                From &pound;8.00<br /><small class="text-muted">+&pound;2.50 delivery</small>
-
-                <button type="button" class="btn btn-primary">Buy Now</button>
-            </div>
-
-        </div>
-
-
-
-        <div class="row" data-item-price="9.25" data-total-price="11.25">
-            <div class="col-sm-2">
-                <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=99%C3%9799&w=99&h=99" class="img-rounded" />
-            </div>
-            <div class="col-sm-8">
-                <h3>This is a product title</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius auctor erat a placerat.
-                    Nunc congue, lacus id commodo blandit, ex tortor blandit orci, nec euismod nisl lectus a sapien.
-                    Vivamus porta neque vel finibus ullamcorper. Donec tincidunt mi quis auctor convallis. Nullam
-                    imperdiet nisl.
-                </p>
-            </div>
-            <div class="col-sm-2">
-                From &pound;9.25<br /><small class="text-muted">+&pound;2.00 delivery</small>
-
-                <button type="button" class="btn btn-primary">Buy Now</button>
-            </div>
-
-        </div>
-
+    <div class="col-sm-8 collection" data-total-price="<?= $this->Data()->asJsonArray($this->products, 'price_excl_shipping') ?>">
+        <?php echo $this->partialLoop('application\_partials\product.phtml', $this->products) ?>
     </div>
 
 
@@ -113,10 +29,8 @@
 <?php $this->inlineScript()->captureStart();
 echo <<<JS
 $(function() {
-    var prices = [];
-    $('.collection .row').each(function( index ) {
-        prices.push(Math.ceil($(this).data('item-price')));
-    });
+    var prices = $('.collection').data('total-price');
+
     var min_price = Math.min.apply(Math,prices);
     var max_price = Math.max.apply(Math,prices);
     $( "#slider-range" ).slider({

@@ -116,6 +116,7 @@ return array(
     'view_helpers' => array(
         'invokables' => array(
             'cdn' => 'Application\View\Helper\Cdn',
+            'data' => 'Application\View\Helper\Data',
         )
     )
 );
