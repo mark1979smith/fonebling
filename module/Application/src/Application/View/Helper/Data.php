@@ -11,6 +11,8 @@ namespace Application\View\Helper;
 use Zend\Json\Json;
 use Zend\Stdlib\ArrayObject;
 use Zend\View\Helper\AbstractHelper;
+use \RecursiveIteratorIterator as RecursiveIteratorIterator;
+use \RecursiveArrayIterator as RecursiveArrayIterator;
 
 class Data extends AbstractHelper
 {
@@ -28,18 +30,76 @@ class Data extends AbstractHelper
         }
 
         $build = [];
-        foreach($data as $k => $value) {
-            if ($data instanceof ArrayObject) {
-                foreach($value as $c => $d) {
-                    if (strcasecmp($c, $key) === 0) {
-                        $build[] = $d;
+
+        $dot_notation_array = $this->asDotNotationArray($data);
+
+        foreach(array_keys($dot_notation_array) as $array_key) {
+            if (preg_match('/^'. $key .'/', $array_key, $matches)) {
+                $matching_value = $dot_notation_array[$matches[0]];
+                if (stristr($matching_value, ',') === false) {
+                    $build[] = $matching_value;
+                } else {
+                    $matching_values = array_map('trim', explode(',', $matching_value));
+                    foreach($matching_values as $matching_value) {
+                        array_push( $build, $matching_value );
                     }
                 }
-            } else if (strcasecmp($k, $key) === 0) {
-                $build[] = $value;
             }
         }
 
         return Json::encode($build);
+    }
+
+    /**
+     * Transform an ArrayObject into a normal array
+     * @param ArrayObject $data
+     * @return array
+     */
+    public function asArray(ArrayObject $data)
+    {
+        $build = $data->getArrayCopy();
+
+        foreach($build as $key => $value) {
+            if ($value instanceof ArrayObject) {
+                $build[$key] = $value->getArrayCopy();
+            }
+        }
+
+        return $build;
+    }
+
+    /**
+     * Transform multidimensional array to flat array with the keys using dot notation
+     * @param ArrayObject $data
+     * @link http://stackoverflow.com/questions/10424335/php-convert-multidimensional-array-to-2d-array-with-dot-notation-keys#answer-10424516
+     *
+     * @return array
+     */
+    public function asDotNotationArray(ArrayObject $data)
+    {
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveArrayIterator(
+                $this->asArray($data)
+            )
+        );
+
+        $result = array();
+
+        foreach ($iterator as $leafValue) {
+
+            $keys = array();
+
+            foreach (range(0, $iterator->getDepth()) as $depth) {
+
+                $keys[] = $iterator->getSubIterator($depth)->key();
+
+            }
+
+            $result[ join('.', $keys) ] = $leafValue;
+
+        }
+
+        return $result;
     }
 }
