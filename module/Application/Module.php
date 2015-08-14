@@ -9,10 +9,12 @@
 
 namespace Application;
 
+use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
-class Module
+class Module implements AutoloaderProviderInterface, ConfigProviderInterface
 {
     public function onBootstrap(MvcEvent $e)
     {
@@ -26,14 +28,10 @@ class Module
         return include __DIR__ . '/config/module.config.php';
     }
 
+    /**
+     * This is populated through Composer
+     * @link http://framework.zend.com/manual/current/en/user-guide/modules.html#autoloading-files
+     */
     public function getAutoloaderConfig()
-    {
-        return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
-    }
+    {}
 }
