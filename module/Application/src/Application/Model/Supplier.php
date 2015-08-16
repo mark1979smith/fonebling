@@ -7,6 +7,10 @@
  */
 namespace Application\Model;
 
+/**
+ * Class Supplier
+ * @package Application\Model
+ */
 class Supplier
 {
     public $supplier_id;

@@ -26,10 +26,14 @@ class CollectionController extends AbstractActionController
             'price_excl_shipping' => 9.99,
             'shipping_price' => 1.24,
             'price_incl_shipping' => (9.99+1.24),
+            'type' => [
+                'charger'
+            ],
             'attributes' => [
-                'colour' => 'Black',
-                'type' => 'Charger',
-                'bundle' => 'N'
+                'charger' => [
+                    'colour' => 'Black',
+                    'charging type' => 'Wireless'
+                ]
             ]
         ]));
         $products->append(new ArrayObject([
@@ -41,10 +45,12 @@ class CollectionController extends AbstractActionController
             'price_excl_shipping' => 8.99,
             'shipping_price' => 0.99,
             'price_incl_shipping' => (8.99+0.99),
+            'type' => [
+                'screen protector'
+            ],
             'attributes' => [
-                'colour' => 'Grey',
-                'type' => 'Screen Protector',
-                'bundle' => 'N'
+                'screen protector' => [
+                ]
             ]
         ]));
         $products->append(new ArrayObject([
@@ -56,10 +62,13 @@ class CollectionController extends AbstractActionController
             'price_excl_shipping' => 12.5,
             'shipping_price' => 0,
             'price_incl_shipping' => 12.5,
+            'type' => [
+                'case'
+            ],
             'attributes' => [
-                'colour' => 'Black',
-                'type' => 'Case',
-                'bundle' => 'N'
+                'case' => [
+                    'colour' => 'Black',
+                ]
             ]
         ]));
         $products->append(new ArrayObject([
@@ -71,10 +80,16 @@ class CollectionController extends AbstractActionController
             'price_excl_shipping' => 11.35,
             'shipping_price' => 1.00,
             'price_incl_shipping' => (11.35+1),
+            'type' => [
+                'case', 'charger'
+            ],
             'attributes' => [
-                'colour' => 'Orange',
-                'type' => 'Case,Charger',
-                'bundle' => 'Y'
+                'case' => [
+                    'colour' => 'Orange',
+                ],
+                'charger' => [
+                    'charging type' => 'Wired'
+                ],
             ]
         ]));
 

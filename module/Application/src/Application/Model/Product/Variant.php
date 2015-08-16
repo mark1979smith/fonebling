@@ -8,6 +8,11 @@
 
 namespace Application\Model\Product;
 
+/**
+ * Class Variant
+ * Determines the main difference between 2 products which share the same product id.
+ * @package Application\Model\Product
+ */
 class Variant
 {
     public $product_id;

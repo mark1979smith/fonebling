@@ -1,6 +1,8 @@
 <div class="row" data-item-price="<?= $this->price_excl_shipping ?>" data-total-price="<?= ($this->price_excl_shipping + $this->shipping_price) ?>"<?php
-    foreach($this->attributes as $attribute_name => $attribute_value) :
-        echo ' data-attribute-'. $attribute_name .'="'. $attribute_value .'"';
+    foreach($this->attributes as $product_type => $attribute_value_array) :
+        foreach($attribute_value_array as $attribute_name => $attribute_value) :
+            echo ' data-attribute-'.$product_type .'-'. $attribute_name .'="'. $attribute_value .'"';
+        endforeach;
     endforeach; ?>>
     <div class="col-sm-2">
         <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=99%C3%9799&w=99&h=99" class="img-rounded"/>

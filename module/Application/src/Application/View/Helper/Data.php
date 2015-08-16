@@ -18,11 +18,12 @@ class Data extends AbstractHelper
 {
     /**
      * @param ArrayObject $data
-     * @param null $key
+     * @param string $key
+     * @param boolean $strict_search Setting false will allow children
      * @return string
      * @throws \Exception
      */
-    public function asJsonArray(ArrayObject $data, $key = null)
+    public function getKeyValue(ArrayObject $data, $key)
     {
 
         if (is_null($data)) {
@@ -34,12 +35,13 @@ class Data extends AbstractHelper
         $dot_notation_array = $this->asDotNotationArray($data);
 
         foreach(array_keys($dot_notation_array) as $array_key) {
-            if (preg_match('/^'. $key .'/', $array_key, $matches)) {
+            if (preg_match('/^'. $this->sanitize($key) .'$/', $array_key, $matches)) {
                 $matching_value = $dot_notation_array[$matches[0]];
                 if (stristr($matching_value, ',') === false) {
                     $build[] = $matching_value;
                 } else {
                     $matching_values = array_map('trim', explode(',', $matching_value));
+
                     foreach($matching_values as $matching_value) {
                         array_push( $build, $matching_value );
                     }
@@ -47,7 +49,50 @@ class Data extends AbstractHelper
             }
         }
 
+        // Return false if not matches found
+        if (empty($build)) {
+            return false;
+        }
+
         return Json::encode($build);
+    }
+
+    /**
+     * @param ArrayObject $data
+     * @param string $key
+     * @param bool|false $strict - Allows/Disallows children when searching
+     * @return bool
+     */
+    public function doesKeyExist(ArrayObject $data, $key, $strict = false)
+    {
+        $dot_notation_array = $this->asDotNotationArray($data);
+        foreach(array_keys($dot_notation_array) as $array_key) {
+            if (preg_match('/^'. $this->sanitize($key) . ($strict ? '$' : '') .'/', $array_key, $matches)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function doesValueExist(ArrayObject $data, $key_search, $value, $strict = false)
+    {
+        $dot_notation_array = $this->asDotNotationArray($data);
+        $return = [];
+
+        foreach(array_keys($dot_notation_array) as $array_key) {
+            if (
+                preg_match('/^'. $this->sanitize($key_search) . ($strict ? '$' : '') .'/', $array_key, $matches) &&
+                $value == $this->sanitize($dot_notation_array[$array_key])
+            ) {
+                $return[] = $dot_notation_array[$array_key];
+            }
+        }
+        if (!count($return)) {
+            return false;
+        }
+
+        return $return;
     }
 
     /**
@@ -96,10 +141,15 @@ class Data extends AbstractHelper
 
             }
 
-            $result[ join('.', $keys) ] = $leafValue;
+            $result[ join('.', array_map(array($this, 'sanitize'), $keys)) ] = $leafValue;
 
         }
 
         return $result;
+    }
+
+    public function sanitize($text)
+    {
+        return strtolower(preg_replace('/[^\[\]\-\.a-z0-9]/i', '', $text));
     }
 }

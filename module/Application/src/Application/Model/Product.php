@@ -8,6 +8,11 @@
 
 namespace Application\Model;
 
+/**
+ * Class Product
+ * The main product class
+ * @package Application\Model
+ */
 class Product
 {
     public $product_id;
