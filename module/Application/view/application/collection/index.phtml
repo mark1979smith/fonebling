@@ -19,19 +19,12 @@
 
         <?php
         echo '<h4>Product Types</h4>';
-        echo '<ol>';
-        foreach($this->ProductType()->getTypes() as $product_type) :
-            if ($this->Data()->doesValueExist($this->products, '[0-9]+.type', $this->Data()->sanitize($product_type))) :
-                echo '<li>', $product_type, '</li>';
-            endif;
-
-        endforeach;
-        echo '</ol>';
+            echo $this->Navigation()->setProducts($this->products)->productTypes();
          ?>
 
 
     </div>
-    <div class="col-sm-8 collection" data-total-price="<?= $this->Data()->getKeyValue($this->products, '[0-9]+.price_incl_shipping') ?>">
+    <div class="col-sm-8 collection" data-total-price="<?= $this->json($this->Data()->getKeyValue($this->products, '[0-9]+.price_incl_shipping')) ?>">
         <?php echo $this->partialLoop('application\_partials\product.phtml', $this->Data()->asArray($this->products)) ?>
     </div>
 

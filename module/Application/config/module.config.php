@@ -118,6 +118,7 @@ return array(
             'cdn' => 'Application\View\Helper\Cdn',
             'data' => 'Application\View\Helper\Data',
             'producttype' => 'Application\View\Helper\ProductType',
+            'navigation' => 'Application\View\Helper\Navigation',
         )
     )
 );

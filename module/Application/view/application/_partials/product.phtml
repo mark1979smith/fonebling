@@ -1,7 +1,7 @@
 <div class="row" data-item-price="<?= $this->price_excl_shipping ?>" data-total-price="<?= ($this->price_excl_shipping + $this->shipping_price) ?>"<?php
     foreach($this->attributes as $product_type => $attribute_value_array) :
-        foreach($attribute_value_array as $attribute_name => $attribute_value) :
-            echo ' data-attribute-'.$product_type .'-'. $attribute_name .'="'. $attribute_value .'"';
+        foreach($attribute_value_array as $attribute_name => $attribute_label_value) :
+            echo ' data-attribute-'.$this->Data()->sanitize($product_type) .'-'. $this->Data()->sanitize($attribute_name) .'="'. $attribute_label_value['value'] .'"';
         endforeach;
     endforeach; ?>>
     <div class="col-sm-2">

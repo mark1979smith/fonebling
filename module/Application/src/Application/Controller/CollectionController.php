@@ -9,7 +9,7 @@
 namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Stdlib\ArrayObject;
+use \ArrayObject as ArrayObject;
 use Zend\View\Model\ViewModel;
 
 class CollectionController extends AbstractActionController
@@ -31,8 +31,14 @@ class CollectionController extends AbstractActionController
             ],
             'attributes' => [
                 'charger' => [
-                    'colour' => 'Black',
-                    'charging type' => 'Wireless'
+                    'colour' => [
+                        'label' => 'Colour',
+                        'value' => 'Black'
+                    ],
+                    'chargingtype' => [
+                        'label' => 'Charging Type',
+                        'value' => 'Wireless'
+                    ]
                 ]
             ]
         ]));
@@ -49,8 +55,12 @@ class CollectionController extends AbstractActionController
                 'screen protector'
             ],
             'attributes' => [
-                'screen protector' => [
-                ]
+//                'screen protector' => [
+//                    'brand' => [
+//                        'label' => 'Brand',
+//                        'value' => '3M'
+//                    ]
+//                ]
             ]
         ]));
         $products->append(new ArrayObject([
@@ -67,7 +77,10 @@ class CollectionController extends AbstractActionController
             ],
             'attributes' => [
                 'case' => [
-                    'colour' => 'Black',
+                    'colour' => [
+                        'label' => 'Colour',
+                        'value' => 'Black'
+                    ]
                 ]
             ]
         ]));
@@ -85,10 +98,38 @@ class CollectionController extends AbstractActionController
             ],
             'attributes' => [
                 'case' => [
-                    'colour' => 'Orange',
+                    'colour' => [
+                        'label' => 'Colour',
+                        'value' => 'Orange'
+                    ],
                 ],
                 'charger' => [
-                    'charging type' => 'Wired'
+                    'chargingtype' => [
+                        'label' => 'Charging Type',
+                        'value' => 'Wired'
+                    ]
+                ],
+            ]
+        ]));
+
+        $products->append(new ArrayObject([
+            'title' => 'This is a product title',
+            'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius auctor erat a placerat.
+                    Nunc congue, lacus id commodo blandit, ex tortor blandit orci, nec euismod nisl lectus a sapien.
+                    Vivamus porta neque vel finibus ullamcorper. Donec tincidunt mi quis auctor convallis. Nullam
+                    imperdiet nisl.',
+            'price_excl_shipping' => 11.35,
+            'shipping_price' => 1.00,
+            'price_incl_shipping' => (11.35+1),
+            'type' => [
+                'charger'
+            ],
+            'attributes' => [
+                'charger' => [
+                    'chargingtype' => [
+                        'label' => 'Charging Type',
+                        'value' => 'Wired'
+                    ]
                 ],
             ]
         ]));

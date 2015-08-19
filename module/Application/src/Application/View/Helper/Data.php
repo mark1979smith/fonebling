@@ -9,7 +9,7 @@
 namespace Application\View\Helper;
 
 use Zend\Json\Json;
-use Zend\Stdlib\ArrayObject;
+use \ArrayObject as ArrayObject;
 use Zend\View\Helper\AbstractHelper;
 use \RecursiveIteratorIterator as RecursiveIteratorIterator;
 use \RecursiveArrayIterator as RecursiveArrayIterator;
@@ -27,7 +27,7 @@ class Data extends AbstractHelper
     {
 
         if (is_null($data)) {
-            return Json::encode($data);
+            return $data;
         }
 
         $build = [];
@@ -54,7 +54,26 @@ class Data extends AbstractHelper
             return false;
         }
 
-        return Json::encode($build);
+        if (count($build) == 1) {
+            return current($build);
+        }
+
+
+        return $build;
+    }
+
+    public function getKeysMatching(ArrayObject $data, $key)
+    {
+        $dot_notation_array = $this->asDotNotationArray($data);
+
+        $return = array();
+        foreach(array_keys($dot_notation_array) as $array_key) {
+            if (preg_match('/^'. $key .'/', $array_key, $matches)) {
+                $return[] = $array_key;
+            }
+        }
+
+        return $return;
     }
 
     /**
@@ -150,6 +169,11 @@ class Data extends AbstractHelper
 
     public function sanitize($text)
     {
-        return strtolower(preg_replace('/[^\[\]\-\.a-z0-9]/i', '', $text));
+        return strtolower(preg_replace('/'. $this->getSanitizeRegexp() .'/i', '', $text));
+    }
+
+    public function getSanitizeRegexp($negate = true)
+    {
+        return '[' . ($negate ? '^' : '') .'\[\]\-\.a-z0-9]+';
     }
 }
