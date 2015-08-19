@@ -31,29 +31,32 @@ class Navigation extends AbstractHelper
             if ($data_view_helper->doesValueExist($this->productSet, '[0-9]+.type', $data_view_helper->sanitize($product_type))) :
 
                 $regexp = '[0-9]+.attributes.'. $data_view_helper->sanitize($product_type) .'.'. $data_view_helper->getSanitizeRegexp(false);
-                $li = array();
+                $li = [];
+                $attrs = [];
                 $nav_elements = $data_view_helper->getKeysMatching($this->productSet, $regexp);
                 foreach($nav_elements as $key => $value) :
+                    $node_value = $data_view_helper->getKeyValue($this->productSet, $value);
                     if (($key % 2) == 0) :
                         $string = '';
+                        $checkbox = '<input type="checkbox" data-attribute-'. $data_view_helper->sanitize($product_type) .'-'. $data_view_helper->sanitize($node_value) .'="';
                     endif;
-                    $string .= $data_view_helper->getKeyValue($this->productSet, $value);
+                    $string .= $node_value;
                     if (($key % 2) == 0) :
                         $string .= ': ';
                     endif;
                     if (($key % 2) <> 0) :
-                        $li[] = $string;
+                        $checkbox .= $data_view_helper->sanitize($node_value) .'" />';
+                        $li[] = $checkbox . ' ' . $string;
                     endif;
                 endforeach;
-
                 echo '<strong>', $product_type, '</strong>';
                 echo '<ul>';
 
 
-                echo '<li>All ', $product_type, 's</li>';
+                echo '<li><label><input type="checkbox" data-attribute-'. $data_view_helper->sanitize($product_type) .'="*" /> All ', $product_type, 's</label></li>';
 
                 foreach(array_count_values($li) as $value => $count) :
-                    echo '<li>', $value, ' (', $count, ')</li>';
+                    echo '<li><label>', $value, ' (', $count, ')</label></li>';
                 endforeach;
 
                 echo '</ul>';
