@@ -12,8 +12,11 @@
         <p><small><label><input type="radio" name="bundles" value="include" checked="checked" /> Include Bundles</label> <label><input type="radio" name="bundles" value="exclude" /> Exclude Bundles</label></small></p>
         <p>
             <label for="amount">Price range:</label>
-            <div id="amount"></div>
+            <span id="amount"></span>
         </p>
+
+        <input type="hidden" name="filter_min_price" id="filter_min_price" value=""/>
+        <input type="hidden" name="filter_max_price" id="filter_max_price" value=""/>
 
         <div id="slider-range"></div>
 
@@ -37,8 +40,9 @@ echo <<<JS
 $(function() {
     var prices = $('.collection').data('total-price');
 
-    var min_price = Math.min.apply(Math,prices);
-    var max_price = Math.max.apply(Math,prices);
+    var min_price = Math.floor(Math.min.apply(Math,prices));
+    var max_price = Math.ceil(Math.max.apply(Math,prices));
+
     $( "#slider-range" ).slider({
 
         range: true,
@@ -47,12 +51,43 @@ $(function() {
         values: [ min_price , max_price ],
         animate: true,
         slide: function( event, ui ) {
-            $( "#amount" ).html( "&pound;" + ui.values[ 0 ] + " - &pound;" + ui.values[ 1 ] );
+            var low =  ui.values[ 0 ];
+            var high =  ui.values[ 1 ];
+            $( "#amount" ).html( "&pound;" + low + " - &pound;" + high );
+            $( "#filter_min_price" ).val( low );
+            $( "#filter_max_price" ).val( high );
+
+            var list = [];
+            for (var i = low; i <= high; i++) {
+                list.push(i);
+            }
+
+        filter();
         }
 
     });
-    $( "#amount" ).html( "&pound;" + $( "#slider-range" ).slider( "values", 0 ) +
-      " - &pound;" + $( "#slider-range" ).slider( "values", 1 ) );
+    $( "#filter_min_price" ).val( min_price );
+    $( "#filter_max_price" ).val( max_price );
+    $( "#amount" ).html( "&pound;" + min_price +
+      " - &pound;" + max_price );
+
+      filter();
   });
+
+  function filter()
+  {
+
+        $('.collection').find('.row').each(function( index ) {
+            var row = $(this);
+
+            /** PRICE **/
+            if (($(row).data('total-price') >= parseInt($('#filter_min_price').val()) + '.00' && $(row).data('total-price') <= parseInt($('#filter_max_price').val()) + '.00')) {
+                $(row).show();
+            } else {
+                $(row).hide();
+            }
+        });
+
+  }
 JS;
 $this->inlineScript()->captureEnd(); ?>
