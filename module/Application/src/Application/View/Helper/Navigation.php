@@ -38,7 +38,7 @@ class Navigation extends AbstractHelper
                     $node_value = $data_view_helper->getKeyValue($this->productSet, $value);
                     if (($key % 2) == 0) :
                         $string = '';
-                        $checkbox = '<input type="checkbox" data-attribute-'. $data_view_helper->sanitize($product_type) .'-'. $data_view_helper->sanitize($node_value) .'="';
+                        $checkbox = '<input type="checkbox" checked="checked" data-attribute-'. $data_view_helper->sanitize($product_type) .'-'. $data_view_helper->sanitize($node_value) .'="';
                     endif;
                     $string .= $node_value;
                     if (($key % 2) == 0) :
@@ -50,10 +50,10 @@ class Navigation extends AbstractHelper
                     endif;
                 endforeach;
                 echo '<strong>', $product_type, '</strong>';
-                echo '<ul>';
+                echo '<ul class="navigation--product-types">';
 
 
-                echo '<li><label><input type="checkbox" data-attribute-'. $data_view_helper->sanitize($product_type) .'="*" /> All ', $product_type, 's</label></li>';
+                echo '<li><label><input type="checkbox" checked="checked" data-attribute-'. $data_view_helper->sanitize($product_type) .'="*" /> All ', $product_type, 's</label></li>';
 
                 foreach(array_count_values($li) as $value => $count) :
                     echo '<li><label>', $value, ' (', $count, ')</label></li>';

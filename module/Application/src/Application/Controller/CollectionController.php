@@ -60,8 +60,8 @@ class CollectionController extends AbstractActionController
 //                        'label' => 'Brand',
 //                        'value' => '3M'
 //                    ]
-//                ]
-            ]
+                ]
+//            ]
         ]));
         $products->append(new ArrayObject([
             'title' => 'This is a product title',

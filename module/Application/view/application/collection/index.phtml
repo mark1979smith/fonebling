@@ -41,7 +41,7 @@ $(function() {
     var prices = $('.collection').data('total-price');
 
     var min_price = Math.floor(Math.min.apply(Math,prices));
-    var max_price = Math.ceil(Math.max.apply(Math,prices));
+    var max_price = Math.floor(Math.max.apply(Math,prices));
 
     $( "#slider-range" ).slider({
 
@@ -71,7 +71,26 @@ $(function() {
     $( "#amount" ).html( "&pound;" + min_price +
       " - &pound;" + max_price );
 
-      filter();
+
+    /** SELECT/DESELECT ALL PRODUCT TYPES **/
+    $('.navigation--product-types').on('click', 'li:first :checkbox', function(e) {
+        $(this).closest('.navigation--product-types').find(':checkbox').prop('checked', $(this).is(':checked'));
+
+        filter();
+    });
+
+    /** ON CHANGING INDIVIDUAL PRODUCT TYPES **/
+    $('.navigation--product-types').on('click', 'li:gt(0) :checkbox', function(e) {
+        var count_all_options = $(this).closest('.navigation--product-types').find('li:gt(0)').length;
+        var selected_options  = $(this).closest('.navigation--product-types').find('li:gt(0) :checkbox:checked').length;
+
+        $(this).closest('.navigation--product-types').find('li:first :checkbox').prop('checked', (selected_options == count_all_options));
+
+        filter();
+    });
+
+
+    filter();
   });
 
   function filter()
@@ -81,11 +100,28 @@ $(function() {
             var row = $(this);
 
             /** PRICE **/
-            if (($(row).data('total-price') >= parseInt($('#filter_min_price').val()) + '.00' && $(row).data('total-price') <= parseInt($('#filter_max_price').val()) + '.00')) {
+            if (($(row).data('total-price') >= parseInt($('#filter_min_price').val()) + '.00' && $(row).data('total-price') <= parseInt($('#filter_max_price').val()) + '.99')) {
                 $(row).show();
             } else {
                 $(row).hide();
             }
+
+            /** PRODUCT TYPES **/
+            $('.navigation--product-types').each( function (index ) {
+                if (!$(this).find('li:first :checkbox').is(':checked')) {
+                    $(this).find('li:gt(0) :checkbox').each( function (i) {
+                        if(!$(this).is(':checked')) {
+                            for( attribute in $(this).data()) {
+                                if ($(row).data(attribute) != undefined) {
+                                    if ($(this).data(attribute) == $(row).data(attribute)) {
+                                        $(row).hide();
+                                    }
+                                }
+                            }
+                        }
+                    })
+                }
+            });
         });
 
   }
