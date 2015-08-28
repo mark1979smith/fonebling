@@ -53,7 +53,7 @@ class Navigation extends AbstractHelper
                 echo '<ul class="navigation--product-types">';
 
 
-                echo '<li><label><input type="checkbox" checked="checked" data-attribute-'. $data_view_helper->sanitize($product_type) .'="*" /> All ', $product_type, 's</label></li>';
+                echo '<li><label><input type="checkbox" checked="checked" data-type="', $data_view_helper->sanitize($product_type), '" /> All ', $product_type, 's</label></li>';
 
                 foreach(array_count_values($li) as $value => $count) :
                     echo '<li><label>', $value, ' (', $count, ')</label></li>';

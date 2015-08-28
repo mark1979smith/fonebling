@@ -52,7 +52,7 @@ class CollectionController extends AbstractActionController
             'shipping_price' => 0.99,
             'price_incl_shipping' => (8.99+0.99),
             'type' => [
-                'screen protector'
+                'screenprotector'
             ],
             'attributes' => [
 //                'screen protector' => [

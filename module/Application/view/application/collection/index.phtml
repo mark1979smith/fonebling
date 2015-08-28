@@ -108,19 +108,34 @@ $(function() {
 
             /** PRODUCT TYPES **/
             $('.navigation--product-types').each( function (index ) {
-                if (!$(this).find('li:first :checkbox').is(':checked')) {
-                    $(this).find('li:gt(0) :checkbox').each( function (i) {
-                        if(!$(this).is(':checked')) {
-                            for( attribute in $(this).data()) {
-                                if ($(row).data(attribute) != undefined) {
-                                    if ($(this).data(attribute) == $(row).data(attribute)) {
-                                        $(row).hide();
+                $(this).find('li').each(function(i) {
+                        var ele = $(this).find(':checkbox');
+                        for( attribute in $(ele).data()) {
+                            if ($(row).data(attribute) != undefined) {
+                                if ($.isArray( $(row).data(attribute) )) {
+                                    for (ea_attribute in $(row).data(attribute)) {
+                                        if ($(ele).data(attribute) == $(row).data(attribute)[ea_attribute]) {
+                                            if ($(ele).is(':checked')) {
+                                                $(row).show();
+                                            } else {
+                                                $(row).hide();
+                                            }
+
+                                        }
+                                    }
+                                } else {
+                                    if ($(ele).data(attribute) == $(row).data(attribute)) {
+                                        if ($(ele).is(':checked')) {
+                                            $(row).show();
+                                        } else {
+                                            $(row).hide();
+                                        }
                                     }
                                 }
                             }
                         }
-                    })
-                }
+
+                });
             });
         });
 
