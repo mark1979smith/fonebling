@@ -1,4 +1,4 @@
-<div class="row" data-item-price="<?= $this->price_excl_shipping ?>" data-total-price="<?= ($this->price_excl_shipping + $this->shipping_price) ?>"<?php
+<div id="product-<?= $this->partialLoop()->getPartialCounter() ?>" class="row" data-item-price="<?= $this->price_excl_shipping ?>" data-total-price="<?= ($this->price_excl_shipping + $this->shipping_price) ?>"<?php
     echo ' data-type=\'', \Zend\Json\Json::encode($this->type), '\'';
     foreach($this->attributes as $product_type => $attribute_value_array) :
         foreach($attribute_value_array as $attribute_name => $attribute_label_value) :

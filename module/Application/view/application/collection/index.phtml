@@ -95,50 +95,40 @@ $(function() {
 
   function filter()
   {
+    $('.collection').find('.row').each(function( index ) {
+        var row = $(this);
 
-        $('.collection').find('.row').each(function( index ) {
-            var row = $(this);
+        /** Hide row to begin with **/
+        $(row).hide();
 
-            /** PRICE **/
-            if (($(row).data('total-price') >= parseInt($('#filter_min_price').val()) + '.00' && $(row).data('total-price') <= parseInt($('#filter_max_price').val()) + '.99')) {
-                $(row).show();
-            } else {
+        /**
+        * Iterate over attributes available on row
+        */
+        for (attribute in $(row).data()) {
+            /**
+            * Iterate over checkboxes in filter list
+            */
+            $('.navigation--product-types li :checkbox:checked').each(function( index ) {
+                if ($(this).data(attribute) != undefined) {
+                    if (
+                        /** If row data attribute is array and checkbox data attribute exists in array **/
+                        ($.isArray($(row).data(attribute)) && $.inArray($(this).data(attribute), $(row).data(attribute)) != '-1') ||
+                        /** If row data attribuite is string and checkbox data attribute matches **/
+                        (!$.isArray($(row).data(attribute)) && $(this).data(attribute) == $(row).data(attribute))
+                    ) {
+                        $(row).show();
+                    }
+                }
+            });
+        }
+
+        /** PRICE **/
+        if ($(row).is(':visible')) {
+            if (($(row).data('total-price') < parseFloat(parseInt($('#filter_min_price').val()) + '.00')) || ($(row).data('total-price') > parseFloat(parseInt($('#filter_max_price').val()) + '.99'))) {
                 $(row).hide();
             }
-
-            /** PRODUCT TYPES **/
-            $('.navigation--product-types').each( function (index ) {
-                $(this).find('li').each(function(i) {
-                        var ele = $(this).find(':checkbox');
-                        for( attribute in $(ele).data()) {
-                            if ($(row).data(attribute) != undefined) {
-                                if ($.isArray( $(row).data(attribute) )) {
-                                    for (ea_attribute in $(row).data(attribute)) {
-                                        if ($(ele).data(attribute) == $(row).data(attribute)[ea_attribute]) {
-                                            if ($(ele).is(':checked')) {
-                                                $(row).show();
-                                            } else {
-                                                $(row).hide();
-                                            }
-
-                                        }
-                                    }
-                                } else {
-                                    if ($(ele).data(attribute) == $(row).data(attribute)) {
-                                        if ($(ele).is(':checked')) {
-                                            $(row).show();
-                                        } else {
-                                            $(row).hide();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                });
-            });
-        });
-
+        }
+    });
   }
 JS;
 $this->inlineScript()->captureEnd(); ?>
