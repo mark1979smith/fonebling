@@ -28,7 +28,9 @@
 
     </div>
     <div class="col-sm-8 collection" data-total-price="<?= $this->json($this->Data()->getKeyValue($this->products, '[0-9]+.price_incl_shipping')) ?>">
+        <div class="nav"></div>
         <?php echo $this->partialLoop('application\_partials\product.phtml', $this->Data()->asArray($this->products)) ?>
+        <div class="nav"></div>
     </div>
 
 
@@ -40,8 +42,11 @@ echo <<<JS
 $(function() {
     var prices = $('.collection').data('total-price');
 
-    var min_price = Math.floor(Math.min.apply(Math,prices));
-    var max_price = Math.floor(Math.max.apply(Math,prices));
+    var min_price   = Math.floor(Math.min.apply(Math,prices));
+    var max_price   = Math.floor(Math.max.apply(Math,prices));
+
+    var per_page    = 2;
+    var page_number = 1;
 
     $( "#slider-range" ).slider({
 
@@ -62,7 +67,8 @@ $(function() {
                 list.push(i);
             }
 
-        filter();
+        filter(per_page);
+        nav();
         }
 
     });
@@ -77,6 +83,7 @@ $(function() {
         $(this).closest('.navigation--product-types').find(':checkbox').prop('checked', $(this).is(':checked'));
 
         filter();
+        nav();
     });
 
     /** ON CHANGING INDIVIDUAL PRODUCT TYPES **/
@@ -87,20 +94,43 @@ $(function() {
         $(this).closest('.navigation--product-types').find('li:first :checkbox').prop('checked', (selected_options == count_all_options));
 
         filter();
+        nav();
+    });
+
+    /** ON NAVIGATING TO A PAGE **/
+    $('.nav').on('click', '.pagination-link', function(e) {
+        var page_number = $(this).data('page-number');
+        /** Hide all products **/
+        $('.collection').find('.row').hide();
+
+        /** Only show products for the required page **/
+        $('.collection').find('.row[data-page=' + page_number +']').show();
+
+        /** Remove navigation selected class **/
+        $(this).closest('.nav').find('.selected-page').removeClass('selected-page');
+
+        /** Add navigation selected class to current element **/
+        $(this).addClass('selected-page');
     });
 
 
     filter();
-  });
+    nav();
 
-  function filter()
-  {
+    /**
+    * Filter products based on side menu selected options
+    */
+    function filter()
+    {
+
+    var show_product_if_matched = true;
+
+    /** Hide row to begin with **/
+    $('.collection').find('.row').hide();
+    $('.collection').find('.row').removeAttr('data-page');
+
     $('.collection').find('.row').each(function( index ) {
         var row = $(this);
-
-        /** Hide row to begin with **/
-        $(row).hide();
-
         /**
         * Iterate over attributes available on row
         */
@@ -116,7 +146,10 @@ $(function() {
                         /** If row data attribuite is string and checkbox data attribute matches **/
                         (!$.isArray($(row).data(attribute)) && $(this).data(attribute) == $(row).data(attribute))
                     ) {
-                        $(row).show();
+                        $(row).attr('data-page', '');
+                        if (show_product_if_matched) {
+                            $(row).show();
+                        }
                     }
                 }
             });
@@ -126,9 +159,56 @@ $(function() {
         if ($(row).is(':visible')) {
             if (($(row).data('total-price') < parseFloat(parseInt($('#filter_min_price').val()) + '.00')) || ($(row).data('total-price') > parseFloat(parseInt($('#filter_max_price').val()) + '.99'))) {
                 $(row).hide();
+                $(row).removeAttr('data-page');
             }
         }
+
+        /** If we have a full page, we don't want to show anymore products **/
+        if ($('.collection').find('.row:visible').length >= ( page_number * per_page )) {
+            show_product_if_matched = false;
+        }
+
     });
   }
+
+    /**
+    * Build pagination
+    */
+  function nav()
+  {
+    var pages_count = 1;
+    var index = 0;
+    /** Iterate over all products **/
+    $('.collection').find('.row[data-page=""]').each( function ( i ) {
+      if (index < pages_count*per_page && index >= (pages_count-1)*per_page) {
+        $(this).attr('data-page', pages_count);
+      } else {
+        /** Increment page_count value **/
+        pages_count++;
+        $(this).attr('data-page', pages_count);
+      }
+
+      index++;
+    });
+
+    /** Only show pagination if we have more than one page **/
+    if (pages_count <= 1) {
+        $('.collection .nav').html('');
+        return;
+    }
+
+    /** Build HTML **/
+    var page_nav = '<ul>';
+    for (i=1;i<=pages_count;i++){
+        page_nav += '<li class="pagination-link" data-page-number="' + i + '"><a rel="' + i + '" href="#">' + i + '</a></li>';
+    }
+    page_nav += '</ul>';
+
+    // Set HTML
+    $('.collection .nav').html(page_nav);
+  }
+  });
+
+
 JS;
 $this->inlineScript()->captureEnd(); ?>
