@@ -48,6 +48,7 @@ $(function() {
     var per_page    = 2;
     var page_number = 1;
 
+    /** PRICE SLIDER **/
     $( "#slider-range" ).slider({
 
         range: true,
@@ -77,6 +78,11 @@ $(function() {
     $( "#amount" ).html( "&pound;" + min_price +
       " - &pound;" + max_price );
 
+    /** INCLUDE/EXCLUDE BUNDLES **/
+    $('#collection__filters').on('click', 'input:radio[name="bundles"]', function(e) {
+        filter();
+        nav();
+    });
 
     /** SELECT/DESELECT ALL PRODUCT TYPES **/
     $('.navigation--product-types').on('click', 'li:first :checkbox', function(e) {
@@ -153,6 +159,16 @@ $(function() {
                     }
                 }
             });
+        }
+
+        /** BUNDLES? **/
+        if (
+            $.isArray($(row).data('type')) && /** Is Type Array Value **/
+            $(row).data('type').length > 1 && /** AND has more than one (ie Bundle) **/
+            $('input:radio[name="bundles"]:checked').val() == 'exclude' /** AND we want to exclude Bundles **/
+        ) {
+            $(row).hide();
+            $(row).removeAttr('data-page');
         }
 
         /** PRICE **/
