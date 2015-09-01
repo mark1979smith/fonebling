@@ -16,8 +16,8 @@ class CollectionController extends AbstractActionController
 {
     public function indexAction()
     {
-        $products = new ArrayObject();
-        $products->append(new ArrayObject([
+        $data = new ArrayObject();
+        $data->append(new ArrayObject([
             'title' => 'This is a product title',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius auctor erat a placerat.
                     Nunc congue, lacus id commodo blandit, ex tortor blandit orci, nec euismod nisl lectus a sapien.
@@ -42,7 +42,7 @@ class CollectionController extends AbstractActionController
                 ]
             ]
         ]));
-        $products->append(new ArrayObject([
+        $data->append(new ArrayObject([
             'title' => 'This is a product title',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius auctor erat a placerat.
                     Nunc congue, lacus id commodo blandit, ex tortor blandit orci, nec euismod nisl lectus a sapien.
@@ -63,7 +63,7 @@ class CollectionController extends AbstractActionController
                 ]
 //            ]
         ]));
-        $products->append(new ArrayObject([
+        $data->append(new ArrayObject([
             'title' => 'This is a product title',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius auctor erat a placerat.
                     Nunc congue, lacus id commodo blandit, ex tortor blandit orci, nec euismod nisl lectus a sapien.
@@ -84,7 +84,7 @@ class CollectionController extends AbstractActionController
                 ]
             ]
         ]));
-        $products->append(new ArrayObject([
+        $data->append(new ArrayObject([
             'title' => 'This is a product title',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius auctor erat a placerat.
                     Nunc congue, lacus id commodo blandit, ex tortor blandit orci, nec euismod nisl lectus a sapien.
@@ -112,7 +112,7 @@ class CollectionController extends AbstractActionController
             ]
         ]));
 
-        $products->append(new ArrayObject([
+        $data->append(new ArrayObject([
             'title' => 'This is a product title',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius auctor erat a placerat.
                     Nunc congue, lacus id commodo blandit, ex tortor blandit orci, nec euismod nisl lectus a sapien.
@@ -134,7 +134,11 @@ class CollectionController extends AbstractActionController
             ]
         ]));
 
+        $products = new ArrayObject();
 
+        for($i = 0; $i < 11; $i++) {
+            $products->append($data[rand(0, (sizeof($data)-1))]);
+        }
         return new ViewModel(compact('products'));
     }
 }

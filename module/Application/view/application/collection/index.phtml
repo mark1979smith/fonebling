@@ -47,6 +47,7 @@ $(function() {
 
     var per_page    = 2;
     var page_number = 1;
+    var pages_count = 1;
 
     /** PRICE SLIDER **/
     $( "#slider-range" ).slider({
@@ -69,6 +70,7 @@ $(function() {
             }
 
         filter(per_page);
+        paginateProducts();
         nav();
         }
 
@@ -81,6 +83,7 @@ $(function() {
     /** INCLUDE/EXCLUDE BUNDLES **/
     $('#collection__filters').on('click', 'input:radio[name="bundles"]', function(e) {
         filter();
+        paginateProducts();
         nav();
     });
 
@@ -89,6 +92,7 @@ $(function() {
         $(this).closest('.navigation--product-types').find(':checkbox').prop('checked', $(this).is(':checked'));
 
         filter();
+        paginateProducts();
         nav();
     });
 
@@ -100,27 +104,25 @@ $(function() {
         $(this).closest('.navigation--product-types').find('li:first :checkbox').prop('checked', (selected_options == count_all_options));
 
         filter();
+        paginateProducts();
         nav();
     });
 
     /** ON NAVIGATING TO A PAGE **/
     $('.nav').on('click', '.pagination-link', function(e) {
-        var page_number = $(this).data('page-number');
+        page_number = $(this).data('page-number');
         /** Hide all products **/
         $('.collection').find('.row').hide();
 
         /** Only show products for the required page **/
         $('.collection').find('.row[data-page=' + page_number +']').show();
 
-        /** Remove navigation selected class **/
-        $(this).closest('.nav').find('.selected-page').removeClass('selected-page');
-
-        /** Add navigation selected class to current element **/
-        $(this).addClass('selected-page');
+        nav();
     });
 
 
     filter();
+    paginateProducts();
     nav();
 
     /**
@@ -190,9 +192,8 @@ $(function() {
     /**
     * Build pagination
     */
-  function nav()
+  function paginateProducts()
   {
-    var pages_count = 1;
     var index = 0;
     /** Iterate over all products **/
     $('.collection').find('.row[data-page=""]').each( function ( i ) {
@@ -206,7 +207,10 @@ $(function() {
 
       index++;
     });
+  }
 
+    function nav()
+    {
     /** Only show pagination if we have more than one page **/
     if (pages_count <= 1) {
         $('.collection .nav').html('');
@@ -215,9 +219,41 @@ $(function() {
 
     /** Build HTML **/
     var page_nav = '<ul>';
-    for (i=1;i<=pages_count;i++){
-        page_nav += '<li class="pagination-link" data-page-number="' + i + '"><a rel="' + i + '" href="#">' + i + '</a></li>';
+    var max_pages_to_display = 5;
+
+    var elements = new Array();
+    if (pages_count > max_pages_to_display) {
+
+        max_pages_to_display--;
+        var page_number_copy = page_number;
+        for(i=1; i<=(max_pages_to_display/2); i++) {
+            if (page_number_copy > 1) {
+                page_number_copy--;
+            }
+        }
+
+        for(i=Math.min(page_number_copy, (pages_count-max_pages_to_display)); i<=Math.min((page_number_copy+max_pages_to_display),pages_count); i++) {
+            elements.push(i);
+        }
+    } else {
+        for (i=1;i<=pages_count;i++){
+           elements.push(i);
+        }
     }
+    if (pages_count > max_pages_to_display) {
+        page_nav += '<li class="pagination-link" data-page-number="1"><a rel="1" href="#">First</a></li>';
+    }
+    for(i in elements) {
+        page_nav += '<li class="pagination-link';
+        if ( page_number == elements[i] ) {
+            page_nav += ' selected-page';
+        }
+        page_nav += '" data-page-number="' + elements[i] + '"><a rel="' + elements[i] + '" href="#">' + elements[i] + '</a></li>';
+    }
+    if (pages_count > max_pages_to_display) {
+        page_nav += '<li class="pagination-link" data-page-number="' + pages_count + '"><a rel="' + pages_count + '" href="#">Last</a></li>';
+    }
+
     page_nav += '</ul>';
 
     // Set HTML
